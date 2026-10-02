@@ -1,6 +1,6 @@
 # 调用方 Codex：从这里开始
 
-这是客服机器人配置开发的公开方法仓库。当前方法包版本：`24921fbb50124d56`。[版本声明](./latest.json)指向[新人启动包](./releases/24921fbb50124d564641c42cfa292a5cefc0323bcca20638adc5ed35a2418b0d/startup.zip)。仓库不包含客户资料、工作包或 Token。
+这是客服机器人配置开发的公开方法仓库。当前方法包版本：`2135feb3deac1e88`。[版本声明](./latest.json)指向[新人启动包](./releases/2135feb3deac1e886999899739be5c4121d56271ef29856ae76dfeb24b4df973/startup.zip)。仓库不包含客户资料、工作包或 Token。
 
 ## 新人 Codex 的任务
 
