@@ -171,7 +171,7 @@ def main() -> None:
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--manifest-url", default=LATEST_URL)
     args = parser.parse_args()
-    print(json.dumps(install(args.manifest_url, args.output_root), ensure_ascii=False, indent=2))
+    print(json.dumps(install(args.manifest_url, args.output_root), ensure_ascii=True, indent=2))
 
 
 if __name__ == "__main__":
