@@ -61,13 +61,16 @@ def checked_name(name: str) -> str:
 def checked_bundle(data: bytes) -> tuple[str, str, dict]:
     with zipfile.ZipFile(io.BytesIO(data)) as archive:
         infos = archive.infolist()
-        if len(infos) > MAX_FILES or archive.testzip() is not None:
-            raise ValueError("ZIP count or CRC check failed")
+        if len(infos) > MAX_FILES:
+            raise ValueError("ZIP file count limit exceeded")
         files = {}
         portable = set()
+        portable_files = set()
         total = 0
         for info in infos:
             name = checked_name(info.filename)
+            if info.filename != name + ("/" if info.is_dir() else ""):
+                raise ValueError(f"non-canonical ZIP path: {info.filename!r}")
             canonical = unicodedata.normalize("NFC", name.casefold())
             if canonical in portable:
                 raise ValueError(f"ZIP path collision: {info.filename!r}")
@@ -77,18 +80,25 @@ def checked_bundle(data: bytes) -> tuple[str, str, dict]:
                 raise ValueError(f"unsupported ZIP member: {info.filename!r}")
             if info.is_dir():
                 continue
+            portable_files.add(canonical)
             if info.file_size > MAX_FILE_SIZE:
                 raise ValueError("ZIP member exceeds size limit")
             total += info.file_size
             if total > MAX_TOTAL_SIZE:
                 raise ValueError("ZIP expanded size limit exceeded")
             files[name] = archive.read(info)
+        for name in portable:
+            parts = name.split("/")
+            if any("/".join(parts[:index]) in portable_files for index in range(1, len(parts))):
+                raise ValueError(f"ZIP file conflicts with directory: {name!r}")
         tops = {name.split("/", 1)[0] for name in files}
         if len(tops) != 1:
             raise ValueError("ZIP must have one top-level directory")
         top = tops.pop()
         prefix = top + "/"
         manifest_name = prefix + "文件校验清单.json"
+        if manifest_name not in files:
+            raise ValueError("bundle manifest missing")
         manifest = json.loads(files[manifest_name])
         entries = manifest.get("files")
         skills = manifest.get("skills")
@@ -103,13 +113,15 @@ def checked_bundle(data: bytes) -> tuple[str, str, dict]:
                 raise ValueError("invalid manifest path")
             member = prefix + path
             content = files.get(member)
-            if content is None or entry.get("bytes") != len(content) or entry.get("sha256", "").lower() != sha256(content).hexdigest():
+            hashed = entry.get("sha256")
+            if (content is None or entry.get("bytes") != len(content) or not isinstance(hashed, str) or
+                    hashed.lower() != sha256(content).hexdigest()):
                 raise ValueError(f"bundle manifest mismatch: {path}")
             expected.add(member)
         if set(files) != expected:
             raise ValueError("bundle files differ from manifest")
         project_names = {entry["path"].rsplit("/", 1)[0] for entry in entries
-                         if entry["path"].endswith("/AGENTS.md")}
+                         if entry["path"].count("/") == 1 and entry["path"].endswith("/AGENTS.md")}
         if len(project_names) != 1:
             raise ValueError("project AGENTS.md missing")
         project = project_names.pop()
