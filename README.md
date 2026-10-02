@@ -1,8 +1,8 @@
 # AI 客服交付方法与经验同步
 
-这是调用方 Codex 的客服配置方法仓库。当前方法包版本：`ed53b6b4f5deaa58`。
+这是调用方 Codex 的客服配置方法仓库。当前方法包版本：`f76d280063fc3017`。
 
-[下载当前新人启动包](./releases/ed53b6b4f5deaa585f9b369920b4ebba9555edc44d0b7a6db6ee672e293d055e/startup.zip)；[查看版本摘要](./latest.json)。下载后先阅读包内 `先看这里.md`，把内层 `AI客服机器人交付中心` 文件夹添加为自己的 Codex 本地项目。
+[下载当前新人启动包](./releases/f76d280063fc30175a53df1515ce0f644553a56935c5c1c7dbf2bd222cfd8e04/startup.zip)；[查看版本摘要](./latest.json)。下载后先阅读包内 `先看这里.md`，把内层 `AI客服机器人交付中心` 文件夹添加为自己的 Codex 本地项目。
 
 ## 新人上手
 
