@@ -78,6 +78,9 @@ def checked_bundle(data: bytes) -> tuple[str, str, dict]:
             mode = stat.S_IFMT((info.external_attr >> 16) & 0xFFFF)
             if mode not in (0, stat.S_IFREG, stat.S_IFDIR):
                 raise ValueError(f"unsupported ZIP member: {info.filename!r}")
+            if (info.is_dir() and mode == stat.S_IFREG) or \
+                    (not info.is_dir() and mode == stat.S_IFDIR):
+                raise ValueError(f"ZIP member type conflicts with path: {info.filename!r}")
             if info.is_dir():
                 continue
             portable_files.add(canonical)
