@@ -1,10 +1,10 @@
 # AI 客服配置方法仓库
 
-把本仓库地址交给调用方 Codex，它会自行取得并校验最新版方法包。仓库只分发通用 Skill、项目规则、管理员契约和工具，不存客户资料、Bot 工作包或 Token。当前方法包版本：`58924e7128a6938a`。
+把本仓库地址交给调用方 Codex，它会自行取得并校验最新版方法包。仓库只分发通用 Skill、项目规则、管理员契约和工具，不存客户资料、Bot 工作包或 Token。当前方法包版本：`872c3e385c4463df`。
 
 ## 从这里开始
 
-1. Codex 读取[引导脚本](./bootstrap.py)，核对 SHA-256 为 `d7c27652899a6b25ce2f7801a5a97a9b995262c45adb12e1aa61003faf47667b`，在本机 Python 3.11 执行 `bootstrap.py --output-root <本机工作目录>`。脚本按[最新版本索引](./latest.json)下载[方法包](./releases/58924e7128a6938a30edeea1700e7e70857bf33cdbdf60a8db07335e9d4c9d3e/startup.zip)，校验大小、摘要、包内清单和路径后解压；校验失败即停止。
+1. Codex 读取[引导脚本](./bootstrap.py)，核对 SHA-256 为 `d7c27652899a6b25ce2f7801a5a97a9b995262c45adb12e1aa61003faf47667b`，在本机 Python 3.11 执行 `bootstrap.py --output-root <本机工作目录>`。脚本按[最新版本索引](./latest.json)下载[方法包](./releases/872c3e385c4463df77784879561f825976490b54026fbd00ff9298cc9ccfadc8/startup.zip)，校验大小、摘要、包内清单和路径后解压；校验失败即停止。
 2. 以返回的 `project_dir` 作为本地项目，保留隐藏的 `.agents/skills/`。先读包外 `先看这里.md`、项目 `AGENTS.md`、两个核心 Skill 和平台接口索引。不能由 Codex 完成项目界面关联时，只请用户完成这一项。
 3. 核对 Skill、运行参考、Agent 案例、工具和本机运行环境。随后直接建立真实客户任务；无虚构练习或练习签字门槛。客户资料有什么先分析什么，到平台操作阶段再核对员工 Token、目标环境、Bot 权限和 readiness。
 
