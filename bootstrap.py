@@ -11,9 +11,8 @@ import re
 import shutil
 import stat
 import tempfile
-import time
 import unicodedata
-from urllib.parse import urljoin, urlsplit, urlunsplit
+from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 import zipfile
 
@@ -28,14 +27,6 @@ MAX_TOTAL_SIZE = 256 * 1024 * 1024
 def fetch(url: str) -> bytes:
     with urlopen(Request(url, headers={"User-Agent": "customer-service-bootstrap"}), timeout=180) as response:
         return response.read()
-
-
-def fresh_manifest_url(url: str) -> str:
-    parts = urlsplit(url)
-    if parts.scheme not in {"http", "https"}:
-        return url
-    query = parts.query + ("&" if parts.query else "") + "_refresh=" + str(time.time_ns())
-    return urlunsplit(parts._replace(query=query))
 
 
 def checked_latest(data: bytes) -> dict:
@@ -145,8 +136,10 @@ def checked_bundle(data: bytes) -> tuple[str, str, dict]:
         return top, project, manifest
 
 
-def install(manifest_url: str, output_root: Path, get=fetch) -> dict:
-    latest = checked_latest(get(fresh_manifest_url(manifest_url)))
+def install(manifest_url: str, output_root: Path, get=fetch, expected_version: str | None = None) -> dict:
+    latest = checked_latest(get(manifest_url))
+    if expected_version is not None and latest["version"] != expected_version:
+        raise ValueError("latest.json still returns a different version; retry after the public cache updates")
     archive_url = urljoin(manifest_url, latest["path"])
     data = get(archive_url)
     if len(data) != latest["bytes"] or sha256(data).hexdigest() != latest["sha256"]:
@@ -182,8 +175,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--manifest-url", default=LATEST_URL)
+    parser.add_argument("--expected-version")
     args = parser.parse_args()
-    print(json.dumps(install(args.manifest_url, args.output_root), ensure_ascii=True, indent=2))
+    print(json.dumps(install(args.manifest_url, args.output_root, expected_version=args.expected_version), ensure_ascii=True, indent=2))
 
 
 if __name__ == "__main__":
