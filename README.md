@@ -1,10 +1,10 @@
 # AI 客服配置方法仓库
 
-把本仓库地址交给调用方 Codex，它会自行取得并校验最新版方法包。仓库只分发通用 Skill、项目规则、管理员契约和工具，不存客户资料、Bot 工作包或 Token。当前方法包版本：`3992788c1f2e2318`。
+把本仓库地址交给调用方 Codex，它会自行取得并校验最新版方法包。仓库只分发通用 Skill、项目规则、管理员契约和工具，不存客户资料、Bot 工作包或 Token。当前方法包版本：`2a6ad0d01f1fdb83`。
 
 ## 从这里开始
 
-1. Codex 读取[引导脚本](./bootstrap.py)，核对 SHA-256 为 `9114f6bef4f40012fc7b94ad37fd6e81bdeed3462beb46d4b00677088fca0db6`，在本机 Python 3.11 执行 `bootstrap.py --output-root <本机工作目录> --expected-version 3992788c1f2e2318`。脚本按[最新版本索引](./latest.json)下载[方法包](./releases/3992788c1f2e2318c2476c4ea08bbc5bd797ac2c86f2e1e715e041ecbb509694/startup.zip)，校验版本、大小、摘要、包内清单和路径后解压；校验失败即停止。刚发布后若公开索引暂时仍返回旧版，稍后重试，不用旧版继续开工。
+1. Codex 读取[引导脚本](./bootstrap.py)，核对 SHA-256 为 `9114f6bef4f40012fc7b94ad37fd6e81bdeed3462beb46d4b00677088fca0db6`，在本机 Python 3.11 执行 `bootstrap.py --output-root <本机工作目录> --expected-version 2a6ad0d01f1fdb83`。脚本按[最新版本索引](./latest.json)下载[方法包](./releases/2a6ad0d01f1fdb833a0243346d3fe2d5a9aff1c952c6a28a82834e5f1220092f/startup.zip)，校验版本、大小、摘要、包内清单和路径后解压；校验失败即停止。刚发布后若公开索引暂时仍返回旧版，稍后重试，不用旧版继续开工。
 2. 以返回的 `project_dir` 作为本地项目，保留隐藏的 `.agents/skills/`。先读包外 `先看这里.md`、项目 `AGENTS.md`、`本地项目目录约定.md`、两个核心 Skill 和平台接口索引。不能由 Codex 完成项目界面关联时，只请用户完成这一项。
 3. 当前接收仓库地址的对话就是主控／总控（同一个对话），关联项目后由它创建每个客户的独立任务，不另建第二个控制对话。核对项目级 Skill、运行参考、Agent 案例、工具和本机环境；用户给出客户姓名与机器人类型后，在总控查重并创建真实客户任务。无虚构练习或练习签字门槛。
 
