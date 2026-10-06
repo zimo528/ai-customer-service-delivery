@@ -1,7 +1,7 @@
 {
   "schema": "customer-service-release.v1",
-  "version": "0f50c87c34043b1c",
-  "sha256": "0f50c87c34043b1c7d9ed9ebfdbe0655252809d8dbdf762e01ea15cfd2594391",
-  "path": "releases/0f50c87c34043b1c7d9ed9ebfdbe0655252809d8dbdf762e01ea15cfd2594391/startup.zip",
-  "bytes": 2949880
+  "version": "da76de3cc77f0885",
+  "sha256": "da76de3cc77f08858ec611eb9dbfa50e0fa6d750d33b75286c4a345eb11ed087",
+  "path": "releases/da76de3cc77f08858ec611eb9dbfa50e0fa6d750d33b75286c4a345eb11ed087/startup.zip",
+  "bytes": 2950296
 }
