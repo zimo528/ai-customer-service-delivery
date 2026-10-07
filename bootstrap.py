@@ -38,6 +38,10 @@ def checked_latest(data: bytes) -> dict:
         raise ValueError("invalid release SHA-256")
     if latest.get("version") != hashed[:16] or latest.get("path") != f"releases/{hashed}/startup.zip":
         raise ValueError("release identity or path mismatch")
+    if "displayVersion" in latest:
+        label = latest["displayVersion"]
+        if not isinstance(label, str) or not re.fullmatch(r"[1-9][0-9]*\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)", label):
+            raise ValueError("invalid display version")
     if not isinstance(latest.get("bytes"), int) or not 0 < latest["bytes"] <= MAX_TOTAL_SIZE:
         raise ValueError("invalid release size")
     return latest
@@ -138,7 +142,8 @@ def checked_bundle(data: bytes) -> tuple[str, str, dict]:
 
 def install(manifest_url: str, output_root: Path, get=fetch, expected_version: str | None = None) -> dict:
     latest = checked_latest(get(manifest_url))
-    if expected_version is not None and latest["version"] != expected_version:
+    display_version = latest.get("displayVersion", latest["version"])
+    if expected_version is not None and display_version != expected_version:
         raise ValueError("latest.json still returns a different version; retry after the public cache updates")
     archive_url = urljoin(manifest_url, latest["path"])
     data = get(archive_url)
@@ -166,7 +171,7 @@ def install(manifest_url: str, output_root: Path, get=fetch, expected_version: s
     finally:
         if stage.resolve().is_relative_to(output_root) and stage.exists():
             shutil.rmtree(stage)
-    return {"version": latest["version"], "sha256": latest["sha256"],
+    return {"version": display_version, "sha256": latest["sha256"],
             "bundle_dir": str(target), "project_dir": str(target / project),
             "skills": manifest["skills"]}
 
