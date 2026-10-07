@@ -11,6 +11,7 @@ import re
 import shutil
 import stat
 import tempfile
+import time
 import unicodedata
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
@@ -25,6 +26,8 @@ MAX_TOTAL_SIZE = 256 * 1024 * 1024
 
 
 def fetch(url: str) -> bytes:
+    if url.startswith('https://raw.githubusercontent.com/') and url.endswith('/latest.json'):
+        url += '?v=' + str(time.time_ns())
     with urlopen(Request(url, headers={"User-Agent": "customer-service-bootstrap"}), timeout=180) as response:
         return response.read()
 
