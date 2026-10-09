@@ -45,6 +45,9 @@ def checked_latest(data: bytes) -> dict:
         label = latest["displayVersion"]
         if not isinstance(label, str) or not re.fullmatch(r"[1-9][0-9]*\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)", label):
             raise ValueError("invalid display version")
+        major, minor, patch = map(int, label.split("."))
+        if minor >= 16 or (patch >= 16 and (major != 1 or minor != 0)):
+            raise ValueError("invalid display version")
     if not isinstance(latest.get("bytes"), int) or not 0 < latest["bytes"] <= MAX_TOTAL_SIZE:
         raise ValueError("invalid release size")
     return latest
